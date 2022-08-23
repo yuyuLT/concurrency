@@ -9,6 +9,7 @@
 !app
 !app/*
 app/tmp
+app/go.mod
 
 !scripts
 !scripts/*
