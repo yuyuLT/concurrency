@@ -3,32 +3,35 @@ package main
 import (
 	"fmt"
 	"time"
-	"sync"
 )
 
 func main() {
 	fmt.Println("Hello, concurrency!")
 
-	var wg sync.WaitGroup
-	
-	wg.Add(2)
+	//
+	message1 := make(chan string)
+	message2 := make(chan string)
 
-	go printMessage(&wg)
-	go printMessage2(&wg)
+	go printMessage(message1)
+	go printMessage2(message2)
 
-	wg.Wait()
+	pmsg1 := <- message1
+	pmsg2 := <- message2
+
+	fmt.Println(pmsg1)
+	fmt.Println(pmsg2)
 
 	fmt.Println("finish program!")
 }
 
-func printMessage(wg *sync.WaitGroup) {
-	defer wg.Done()
+func printMessage(message chan string) {
 	time.Sleep(time.Second * 5)
-	fmt.Println("this is message 1")
+	msg1 := "this is message 1"
+	message <- msg1
 }
 
-func printMessage2(wg *sync.WaitGroup) {
-	defer wg.Done()
+func printMessage2(message chan string) {
 	time.Sleep(time.Second * 5)
-	fmt.Println("this is message 2")
+	msg2 := "this is message 2"
+	message <- msg2
 }
