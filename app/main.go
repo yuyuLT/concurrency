@@ -3,118 +3,31 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
-	"net/url"
 	"os"
-	"strings"
-
-	"github.com/PuerkitoBio/goquery"
+	"net/url"
+	"example.com/module/crawl"
+	"example.com/module/typefile"
 )
 
-type Request struct {
-	url   string
-	depth int
-}
 
-type Result struct {
-	err error
-	url string
-}
-
-type Channels struct {
-	req  chan Request
-	res  chan Result
-	quit chan int
-}
-
-func NewChannels() *Channels {
-	return &Channels{
-		req:  make(chan Request, 10),
-		res:  make(chan Result, 10),
-		quit: make(chan int, 10),
-	}
-}
-
-func Fetch(u string) (urls []string, err error) {
-	baseUrl, err := url.Parse(u)
-	if err != nil {
-		return
-	}
-
-	resp, err := http.Get(baseUrl.String())
-	if err != nil {
-		return
-	}
-	defer resp.Body.Close()
-
-	doc, err := goquery.NewDocumentFromReader(resp.Body)
-	if err != nil {
-		return
-	}
-
-	urls = make([]string, 0)
-	doc.Find("a").Each(func(_ int, s *goquery.Selection) {
-		href, exists := s.Attr("href")
-		if exists {
-			reqUrl, err := baseUrl.Parse(href)
-			if err == nil {
-				if strings.Index(reqUrl.String(), "http") == 0 || strings.Index(reqUrl.String(), "/") == 0 {
-					urls = append(urls, reqUrl.String())
-				}
-			}
-		}
-	})
-
-	return
-}
-
-func Crawl(url string, depth int, ch *Channels) {
-	defer func() { ch.quit <- 0 }()
-
-	urls, err := Fetch(url)
-
-	ch.res <- Result{
-		url: url,
-		err: err,
-	}
-
-	if err == nil {
-		for _, url := range urls {
-			ch.req <- Request{
-				url:   url,
-				depth: depth - 1,
-			}
-		}
-	}
-}
-
-const crawlerDepthDefault = 5
+const crawlerDepthDefault = 2
 
 var crawlerDepth int
 
 func main() {
-	/*
-		flag.IntVar(&crawlerDepth, "depth", crawlerDepthDefault, "クロールする深さを指定。")
-		flag.Parse()
 
-		if len(flag.Args()) < 1 {
-			fmt.Fprintln(os.Stderr, "URLを指定してください。")
-			os.Exit(1)
-		}
-		startUrl := flag.Arg(0)
-	*/
 	startUrl := "https://www.e2e-inc.co.jp"
 	if crawlerDepth < 1 {
 		crawlerDepth = crawlerDepthDefault
 	}
 
-	chs := NewChannels()
+	chs := typefile.NewChannels()
 	urlMap := make(map[string]bool)
 	hostMap := make(map[string]bool)
 
-	chs.req <- Request{
-		url:   startUrl,
-		depth: crawlerDepth,
+	chs.Req <- typefile.Request{
+		Url:   startUrl,
+		Depth: crawlerDepth,
 	}
 
 	wc := 0
@@ -122,24 +35,23 @@ func main() {
 	done := false
 	for !done {
 		select {
-		case res := <-chs.res:
-			if res.err == nil {
-				fmt.Printf("Success %s || %d\n", res.url, wc)
+		case res := <-chs.Res:
+			if res.Err == nil {
+				fmt.Printf("Success %s || %d\n", res.Url, wc)
 			} else {
-				fmt.Fprintf(os.Stderr, "Error %s\n%v\n", res.url, res.err)
+				fmt.Fprintf(os.Stderr, "Error %s\n%v\n", res.Url, res.Err)
 			}
-		case req := <-chs.req:
-			if req.depth == 0 {
+		case req := <-chs.Req:
+			if req.Depth == 0 {
 				break
 			}
 
-			u, err := url.Parse(req.url)
+			u, err := url.Parse(req.Url)
 			if err != nil {
 				log.Fatal(err)
 			}
 
-			//if urlMap[u.Host] {
-			if urlMap[req.url] {
+			if urlMap[req.Url] {
 				// 取得済み
 				break
 			}
@@ -150,11 +62,11 @@ func main() {
 			}
 
 			hostMap[u.Host] = true
-			urlMap[req.url] = true
+			urlMap[req.Url] = true
 
 			wc++
-			go Crawl(req.url, req.depth, chs)
-		case <-chs.quit:
+			go crawl.Crawl(req.Url, req.Depth, chs)
+		case <-chs.Quit:
 			wc--
 			if wc == 0 {
 				done = true
