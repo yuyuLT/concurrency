@@ -8,6 +8,7 @@
 
 !app
 !app/*
+!*.go
 app/tmp
 app/go.mod
 app/go.sum
