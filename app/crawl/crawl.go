@@ -8,15 +8,15 @@ import (
 func Crawl(url string, depth int, ch *typefile.Channels) {
 	defer func() { ch.Quit <- 0 }()
 
-	urls, err := analysis.Analize(url)
+	Url := analysis.Analize(url)
 
 	ch.Res <- typefile.Result{
 		Url: url,
-		Err: err,
+		Err: Url.Err,
 	}
 
-	if err == nil {
-		for _, url := range urls {
+	if Url.Err == nil {
+		for _, url := range Url.Urls {
 			ch.Req <- typefile.Request{
 				Url:   url,
 				Depth: depth - 1,

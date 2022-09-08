@@ -2,11 +2,13 @@ package analysis
 
 import (
 	"github.com/PuerkitoBio/goquery"
+	"example.com/module/typefile"
 	"net/http"
 	"net/url"
 )
 
-func Analize(u string) (urls []string, err error) {
+func Analize(u string) (Url typefile.UrlStruct) {
+
 	baseUrl, err := url.Parse(u)
 	if err != nil {
 		return
@@ -23,7 +25,9 @@ func Analize(u string) (urls []string, err error) {
 		return
 	}
 
-	urls = Fetch(baseUrl,doc)
+	urls := Fetch(baseUrl,doc)
+
+	Url = typefile.UrlStruct{urls,err}
 
 	return
 }
