@@ -1,4 +1,4 @@
-package fetch
+package analysis
 
 import (
 	"github.com/PuerkitoBio/goquery"
@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func Fetch(u string) (urls []string, err error) {
+func Analize(u string) (urls []string, err error) {
 	baseUrl, err := url.Parse(u)
 	if err != nil {
 		return
