@@ -16,6 +16,11 @@ type Channels struct {
 	Quit chan int
 }
 
+type UrlStruct struct{
+	Urls []string
+	Err error
+}
+
 func NewChannels() *Channels {
 	return &Channels{
 		Req:  make(chan Request, 10),

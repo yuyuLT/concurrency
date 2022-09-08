@@ -1,28 +1,12 @@
-package fetch
+package analysis
 
 import (
 	"github.com/PuerkitoBio/goquery"
-	"net/http"
-	"net/url"
 	"strings"
+	"net/url"
 )
 
-func Fetch(u string) (urls []string, err error) {
-	baseUrl, err := url.Parse(u)
-	if err != nil {
-		return
-	}
-
-	resp, err := http.Get(baseUrl.String())
-	if err != nil {
-		return
-	}
-	defer resp.Body.Close()
-
-	doc, err := goquery.NewDocumentFromReader(resp.Body)
-	if err != nil {
-		return
-	}
+func Fetch(baseUrl *url.URL, doc *goquery.Document) (urls []string) {
 
 	urls = make([]string, 0)
 	doc.Find("a").Each(func(_ int, s *goquery.Selection) {
