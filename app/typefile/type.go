@@ -19,6 +19,7 @@ type Channels struct {
 type UrlStruct struct{
 	Urls []string
 	Err error
+	IsWordpress bool
 }
 
 func NewChannels() *Channels {
