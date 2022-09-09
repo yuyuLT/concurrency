@@ -5,6 +5,8 @@ import (
 	"example.com/module/typefile"
 	"net/http"
 	"net/url"
+	"fmt"
+	"os"
 )
 
 func Analize(u string) (Url typefile.UrlStruct) {
@@ -26,6 +28,10 @@ func Analize(u string) (Url typefile.UrlStruct) {
 	}
 
 	urls := Fetch(baseUrl,doc)
+	if(CheckWp(baseUrl,doc)){
+		fmt.Println(baseUrl)
+		os.Exit(0)
+	}
 
 	Url = typefile.UrlStruct{urls,err}
 
