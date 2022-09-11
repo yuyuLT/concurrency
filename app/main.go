@@ -10,13 +10,13 @@ import (
 )
 
 
-const crawlerDepthDefault = 2
+const crawlerDepthDefault = 4
 
 var crawlerDepth int
 
 func main() {
 
-	startUrl := "https://www.e2e-inc.co.jp"
+	startUrl := "https://www.pokemoncenter-online.com/"
 	if crawlerDepth < 1 {
 		crawlerDepth = crawlerDepthDefault
 	}
@@ -24,6 +24,7 @@ func main() {
 	chs := typefile.NewChannels()
 	urlMap := make(map[string]bool)
 	hostMap := make(map[string]bool)
+	wordPressMap := make(map[string]bool)
 
 	chs.Req <- typefile.Request{
 		Url:   startUrl,
@@ -40,6 +41,10 @@ func main() {
 				fmt.Printf("Success %s || %d\n", res.Url, wc)
 			} else {
 				fmt.Fprintf(os.Stderr, "Error %s\n%v\n", res.Url, res.Err)
+			}
+
+			if res.IsWordpress {
+				wordPressMap[res.Url] = true
 			}
 		case req := <-chs.Req:
 			if req.Depth == 0 {
@@ -72,5 +77,10 @@ func main() {
 				done = true
 			}
 		}
+	}
+
+	fmt.Println("------------------")
+	for key := range wordPressMap {
+		fmt.Println(key)
 	}
 }

@@ -3,6 +3,7 @@ package typefile
 type Result struct {
 	Err error
 	Url string
+	IsWordpress bool
 }
 
 type Request struct {
