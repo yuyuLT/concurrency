@@ -26,8 +26,9 @@ func Analize(u string) (Url typefile.UrlStruct) {
 	}
 
 	urls := Fetch(baseUrl,doc)
+	isWp := CheckWp(baseUrl,doc)
 
-	Url = typefile.UrlStruct{urls,err}
+	Url = typefile.UrlStruct{urls, err, isWp}
 
 	return
 }

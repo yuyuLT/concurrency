@@ -3,6 +3,7 @@ package typefile
 type Result struct {
 	Err error
 	Url string
+	IsWordpress bool
 }
 
 type Request struct {
@@ -19,6 +20,7 @@ type Channels struct {
 type UrlStruct struct{
 	Urls []string
 	Err error
+	IsWordpress bool
 }
 
 func NewChannels() *Channels {

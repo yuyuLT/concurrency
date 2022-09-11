@@ -13,6 +13,7 @@ func Crawl(url string, depth int, ch *typefile.Channels) {
 	ch.Res <- typefile.Result{
 		Url: url,
 		Err: Url.Err,
+		IsWordpress: Url.IsWordpress,
 	}
 
 	if Url.Err == nil {
