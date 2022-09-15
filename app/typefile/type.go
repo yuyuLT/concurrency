@@ -7,7 +7,8 @@ type Result struct {
 }
 
 type Request struct {
-	Url   string
+	Url string
+	OriginUrl string
 	Depth int
 }
 

@@ -10,19 +10,19 @@ import (
 )
 
 
-const crawlerDepthDefault = 4
+const crawlerDepthDefault = 3
 
 var crawlerDepth int
 
 func main() {
 
-	startUrl := "https://www.pokemoncenter-online.com/"
+	startUrl := "https://www.creatures.co.jp/"
 	if crawlerDepth < 1 {
 		crawlerDepth = crawlerDepthDefault
 	}
 
 	chs := typefile.NewChannels()
-	urlMap := make(map[string]bool)
+	urlMap := make(map[string]string)
 	hostMap := make(map[string]bool)
 	wordPressMap := make(map[string]bool)
 
@@ -56,7 +56,8 @@ func main() {
 				log.Fatal(err)
 			}
 
-			if urlMap[req.Url] {
+			_, ok := urlMap[req.Url]
+			if ok {
 				// 取得済み
 				break
 			}
@@ -67,8 +68,7 @@ func main() {
 			}
 
 			hostMap[u.Host] = true
-			urlMap[req.Url] = true
-
+			urlMap[req.Url] = req.OriginUrl
 			wc++
 			go crawl.Crawl(req.Url, req.Depth, chs)
 		case <-chs.Quit:
@@ -80,7 +80,12 @@ func main() {
 	}
 
 	fmt.Println("------------------")
-	for key := range wordPressMap {
-		fmt.Println(key)
+	for key,value := range urlMap {
+		_, ok := wordPressMap[key]
+		if ok {
+			fmt.Print(key)
+			fmt.Print("  ")
+			fmt.Println(value)
+		}
 	}
 }

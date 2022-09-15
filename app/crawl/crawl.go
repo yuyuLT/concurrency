@@ -17,9 +17,10 @@ func Crawl(url string, depth int, ch *typefile.Channels) {
 	}
 
 	if Url.Err == nil {
-		for _, url := range Url.Urls {
+		for _, value := range Url.Urls {
 			ch.Req <- typefile.Request{
-				Url:   url,
+				Url: value,
+				OriginUrl: url,
 				Depth: depth - 1,
 			}
 		}
