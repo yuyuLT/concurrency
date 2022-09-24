@@ -10,7 +10,7 @@ import (
 )
 
 
-const crawlerDepthDefault = 3
+const crawlerDepthDefault = 1
 
 var crawlerDepth int
 
@@ -31,7 +31,7 @@ func main() {
 		Depth: crawlerDepth,
 	}
 
-	wc := 0
+	wc := 1
 
 	done := false
 	for !done {
@@ -48,6 +48,8 @@ func main() {
 			}
 		case req := <-chs.Req:
 			if req.Depth == 0 {
+				wc --
+				fmt.Println("メイン ",wc)
 				break
 			}
 
@@ -69,8 +71,7 @@ func main() {
 
 			hostMap[u.Host] = true
 			urlMap[req.Url] = req.OriginUrl
-			wc++
-			go crawl.Crawl(req.Url, req.Depth, chs)
+			go crawl.Crawl(req.Url, req.Depth, chs, &wc)
 		case <-chs.Quit:
 			wc--
 			if wc == 0 {
