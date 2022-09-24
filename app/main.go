@@ -7,14 +7,17 @@ import (
 	"net/url"
 	"example.com/module/crawl"
 	"example.com/module/typefile"
+	"time"
 )
 
 
-const crawlerDepthDefault = 1
+const crawlerDepthDefault = 2
 
 var crawlerDepth int
 
 func main() {
+
+	now := time.Now() 
 
 	startUrl := "https://www.creatures.co.jp/"
 	if crawlerDepth < 1 {
@@ -49,7 +52,9 @@ func main() {
 		case req := <-chs.Req:
 			if req.Depth == 0 {
 				wc --
-				fmt.Println("メイン ",wc)
+				if wc == 0 {
+					done = true
+				}
 				break
 			}
 
@@ -89,4 +94,6 @@ func main() {
 			fmt.Println(value)
 		}
 	}
+
+	fmt.Printf("経過: %vms\n", time.Since(now).Milliseconds()) 
 }
