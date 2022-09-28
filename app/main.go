@@ -5,12 +5,13 @@ import (
 	"log"
 	"os"
 	"net/url"
+	"time"
 	"example.com/module/crawl"
 	"example.com/module/typefile"
 )
 
 
-const crawlerDepthDefault = 4
+const crawlerDepthDefault = 3
 
 var crawlerDepth int
 
@@ -31,14 +32,14 @@ func main() {
 		Depth: crawlerDepth,
 	}
 
-	wc := 0
+	req_count := 0
 
 	done := false
 	for !done {
 		select {
 		case res := <-chs.Res:
 			if res.Err == nil {
-				fmt.Printf("Success %s || %d\n", res.Url, wc)
+				fmt.Printf("Success %s", res.Url)
 			} else {
 				fmt.Fprintf(os.Stderr, "Error %s\n%v\n", res.Url, res.Err)
 			}
@@ -69,14 +70,23 @@ func main() {
 			hostMap[u.Host] = true
 			urlMap[req.Url] = true
 
-			wc++
 			go crawl.Crawl(req.Url, req.Depth, chs)
-		case <-chs.Quit:
-			wc--
-			if wc == 0 {
+
+		default : 
+			time.Sleep(time.Second * 1)
+		}
+
+		fmt.Println(len(chs.Req))
+
+		if len(chs.Req) == 0{
+			req_count ++
+			if req_count == 100 {
 				done = true
 			}
+		}else{
+			req_count = 0
 		}
+
 	}
 
 	fmt.Println("------------------")

@@ -6,8 +6,6 @@ import (
 )
 
 func Crawl(url string, depth int, ch *typefile.Channels) {
-	defer func() { ch.Quit <- 0 }()
-
 	Url := analysis.Analize(url)
 
 	ch.Res <- typefile.Result{
