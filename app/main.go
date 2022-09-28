@@ -5,13 +5,12 @@ import (
 	"log"
 	"os"
 	"net/url"
-	"time"
 	"example.com/module/crawl"
 	"example.com/module/typefile"
 )
 
 
-const crawlerDepthDefault = 3
+const crawlerDepthDefault = 4
 
 var crawlerDepth int
 
@@ -39,7 +38,7 @@ func main() {
 		select {
 		case res := <-chs.Res:
 			if res.Err == nil {
-				fmt.Printf("Success")
+				fmt.Println("Success", res.Url)
 			} else {
 				fmt.Fprintf(os.Stderr, "Error %s\n%v\n", res.Url, res.Err)
 			}
@@ -73,12 +72,12 @@ func main() {
 			go crawl.Crawl(req.Url, req.Depth, chs)
 
 		default : 
-			time.Sleep(time.Second * 1)
+			
 		}
 
 		if len(chs.Req) == 0{
 			req_count ++
-			if req_count == 10 {
+			if req_count == 1000000000 {
 				done = true
 			}
 		}else{
@@ -90,12 +89,5 @@ func main() {
 	fmt.Println("------------------")
 	for key := range wordPressMap {
 		fmt.Println(key)
-	}
-
-	for key, _ := range urlMap {
-		_, ok := wordPressMap[key]
-		if ok {
-			fmt.Print(key)
-		}
 	}
 }
