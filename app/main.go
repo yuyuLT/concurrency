@@ -39,7 +39,7 @@ func main() {
 		select {
 		case res := <-chs.Res:
 			if res.Err == nil {
-				fmt.Printf("Success %s", res.Url)
+				fmt.Printf("Success")
 			} else {
 				fmt.Fprintf(os.Stderr, "Error %s\n%v\n", res.Url, res.Err)
 			}
@@ -76,11 +76,9 @@ func main() {
 			time.Sleep(time.Second * 1)
 		}
 
-		fmt.Println(len(chs.Req))
-
 		if len(chs.Req) == 0{
 			req_count ++
-			if req_count == 100 {
+			if req_count == 10 {
 				done = true
 			}
 		}else{
@@ -92,5 +90,12 @@ func main() {
 	fmt.Println("------------------")
 	for key := range wordPressMap {
 		fmt.Println(key)
+	}
+
+	for key, _ := range urlMap {
+		_, ok := wordPressMap[key]
+		if ok {
+			fmt.Print(key)
+		}
 	}
 }
