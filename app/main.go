@@ -10,13 +10,13 @@ import (
 )
 
 
-const crawlerDepthDefault = 4
+const crawlerDepthDefault = 3
 
 var crawlerDepth int
 
 func main() {
 
-	startUrl := "https://www.pokemoncenter-online.com/"
+	startUrl := "https://www.creatures.co.jp/"
 	if crawlerDepth < 1 {
 		crawlerDepth = crawlerDepthDefault
 	}
@@ -31,14 +31,14 @@ func main() {
 		Depth: crawlerDepth,
 	}
 
-	req_count := 0
+	wc := 0
 
 	done := false
 	for !done {
 		select {
 		case res := <-chs.Res:
 			if res.Err == nil {
-				fmt.Println("Success", res.Url)
+				fmt.Printf("Success %s || %d\n", res.Url, wc)
 			} else {
 				fmt.Fprintf(os.Stderr, "Error %s\n%v\n", res.Url, res.Err)
 			}
@@ -69,21 +69,15 @@ func main() {
 			hostMap[u.Host] = true
 			urlMap[req.Url] = true
 
+			wc++
 			go crawl.Crawl(req.Url, req.Depth, chs)
-
-		default : 
-			
+		case <-chs.Quit:
+			wc--
 		}
 
-		if len(chs.Req) == 0{
-			req_count ++
-			if req_count == 1000000000 {
-				done = true
-			}
-		}else{
-			req_count = 0
+		if wc == 0 && len(chs.Req) == 0{
+			done = true
 		}
-
 	}
 
 	fmt.Println("------------------")
