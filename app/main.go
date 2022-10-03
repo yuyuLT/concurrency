@@ -15,7 +15,7 @@ var crawlerDepth int
 
 func main() {
 
-	startUrl := "https://www.creatures.co.jp/"
+	startUrl := ""
 	if crawlerDepth < 1 {
 		crawlerDepth = crawlerDepthDefault
 	}
