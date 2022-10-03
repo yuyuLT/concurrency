@@ -1,8 +1,12 @@
-# docker-golang-boilerplate
+# search-wordpress
 
-Docker template project for golang developer
+The goal is to collect WordPress sites by traversing URLs in a parallel process in the Go language.
 
-## How to develop
+## Original development environment
+
+https://github.com/platetech/docker-golang-boilerplate
+
+## How to develop (quote) 
 1. Write codes in {ProjectRoot}/app dir.
 
     - Set main script name to main.go.
@@ -20,26 +24,3 @@ Docker template project for golang developer
 1. Modify codes in {ProjectRoot}/app dir.
 
 1. Return to step 4.
-
-## How to build production
-1. Set ENVIRONMENT variable to "prod" in .env file.
-
-1. Execute ./init.sh shell script.
-
-1. Execute ./run.sh shell script.
-
-## Run.sh script's sub command
-- none
-
-    - if ENVIRONMENT is set to prod
-
-        build binary and run it in the container
-
-    - else ENVIRONMENT is set to something other than prod
-
-        run main.go in the container
-- air
-
-    - Independent of ENVIRONMENT
-
-        hot reload main.go
