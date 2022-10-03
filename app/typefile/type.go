@@ -25,8 +25,8 @@ type UrlStruct struct{
 
 func NewChannels() *Channels {
 	return &Channels{
-		Req:  make(chan Request, 10),
-		Res:  make(chan Result, 10),
+		Req:  make(chan Request, 100),
+		Res:  make(chan Result, 100),
 		Quit: make(chan int, 10),
 	}
 }

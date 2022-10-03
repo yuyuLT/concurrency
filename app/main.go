@@ -10,13 +10,13 @@ import (
 )
 
 
-const crawlerDepthDefault = 4
+const crawlerDepthDefault = 3
 
 var crawlerDepth int
 
 func main() {
 
-	startUrl := "https://www.pokemoncenter-online.com/"
+	startUrl := "https://www.creatures.co.jp/"
 	if crawlerDepth < 1 {
 		crawlerDepth = crawlerDepthDefault
 	}
@@ -73,9 +73,10 @@ func main() {
 			go crawl.Crawl(req.Url, req.Depth, chs)
 		case <-chs.Quit:
 			wc--
-			if wc == 0 {
-				done = true
-			}
+		}
+
+		if wc == 0 && len(chs.Req) == 0{
+			done = true
 		}
 	}
 
