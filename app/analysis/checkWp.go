@@ -1,9 +1,9 @@
 package analysis
 
 import (
-	"strings"
 	"github.com/PuerkitoBio/goquery"
 	"net/url"
+	"strings"
 )
 
 func CheckWp(baseUrl *url.URL, doc *goquery.Document) (isWp bool) {
@@ -15,12 +15,12 @@ func CheckWp(baseUrl *url.URL, doc *goquery.Document) (isWp bool) {
 		if exists {
 			reqUrl, err := baseUrl.Parse(href)
 			if err == nil {
-				if strings.Contains(reqUrl.String(), "wp-content"){
+				if strings.Contains(reqUrl.String(), "wp-content") {
 					isWp = true
 				}
 			}
 		}
 	})
-	
+
 	return
 }

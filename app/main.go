@@ -1,14 +1,13 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"os"
-	"net/url"
 	"example.com/module/crawl"
 	"example.com/module/typefile"
+	"fmt"
+	"log"
+	"net/url"
+	"os"
 )
-
 
 const crawlerDepthDefault = 3
 
@@ -75,7 +74,7 @@ func main() {
 			wc--
 		}
 
-		if wc == 0 && len(chs.Req) == 0{
+		if wc == 0 && len(chs.Req) == 0 {
 			done = true
 		}
 	}

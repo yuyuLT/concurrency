@@ -2,8 +2,8 @@ package analysis
 
 import (
 	"github.com/PuerkitoBio/goquery"
-	"strings"
 	"net/url"
+	"strings"
 )
 
 func Fetch(baseUrl *url.URL, doc *goquery.Document) (urls []string) {

@@ -1,8 +1,8 @@
 package typefile
 
 type Result struct {
-	Err error
-	Url string
+	Err         error
+	Url         string
 	IsWordpress bool
 }
 
@@ -17,9 +17,9 @@ type Channels struct {
 	Quit chan int
 }
 
-type UrlStruct struct{
-	Urls []string
-	Err error
+type UrlStruct struct {
+	Urls        []string
+	Err         error
 	IsWordpress bool
 }
 

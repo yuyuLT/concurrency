@@ -1,8 +1,8 @@
 package analysis
 
 import (
-	"github.com/PuerkitoBio/goquery"
 	"example.com/module/typefile"
+	"github.com/PuerkitoBio/goquery"
 	"net/http"
 	"net/url"
 )
@@ -25,8 +25,8 @@ func Analize(u string) (Url typefile.UrlStruct) {
 		return
 	}
 
-	urls := Fetch(baseUrl,doc)
-	isWp := CheckWp(baseUrl,doc)
+	urls := Fetch(baseUrl, doc)
+	isWp := CheckWp(baseUrl, doc)
 
 	Url = typefile.UrlStruct{urls, err, isWp}
 
